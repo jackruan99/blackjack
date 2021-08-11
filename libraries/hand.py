@@ -6,6 +6,12 @@ class Hand:
     def get_hand(self):
         return self.hand
     
+    def get_hand_value(self):
+        hand_value = []
+        for card in self.hand:
+            hand_value.append(card.get_value())
+        return hand_value
+    
     def get_card(self, i):
         return self.hand[i]
     
