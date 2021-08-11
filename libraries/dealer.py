@@ -7,7 +7,6 @@
 
 from libraries.hand import Hand
 
-
 class Dealer:
     def __init__(self):
         self.hand = Hand()
