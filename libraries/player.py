@@ -12,36 +12,35 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.hand = [Hand()]
-        self.chips = 0
-        self.bet = 0
+        self.chips = 1000
+        self.bet_amount = 0
 
     def get_name(self):
         return self.name
 
     def get_hand(self):
         return self.hand
+    
+    
+    def reset_hand(self):
+        self.hand = [Hand()]
 
-    def get_chip(self):
-        return self.chip
+    def get_chips(self):
+        return self.chips
+    
+    def get_bet_amount(self):
+        return self.bet_amount
 
     def append_card(self, card):
         self.hand[0].append(card)
 
-    # Actions: Hit, Stand, Double, Split, Surrender, Insurance
-    def hit(self, deck):
-        self.hand.append_card(deck.deal())
-    
-    def stand(self):
-        pass
+    def bet(self, bet_amount):
+        self.chips -= bet_amount
+        self.bet_amount = bet_amount
 
-    def double(self):
-        pass
+    def double_bet(self):
+        self.chips -= self.bet_amount
+        self.bet_amount *= 2
 
-    def split(self):
-        pass
-
-    def surrender(self):
-        pass
-
-    # def insurance(self):
-    #     pass
+    def reset_bet(self):
+        self.bet_amount = 0

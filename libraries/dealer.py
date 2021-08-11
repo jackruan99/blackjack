@@ -24,3 +24,11 @@ class Dealer:
 
     def hit(self, deck):
         self.hand.append_card(deck.deal())
+    
+    def reset_hand(self):
+        self.hand = Hand()
+    
+    def reveal(self):
+        self.hand.flip_second_card()
+        print('Dealer: ', end='')
+        self.hand.print_hand()
