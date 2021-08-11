@@ -12,7 +12,8 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.hand = [Hand()]
-        self.chip = 0
+        self.chips = 0
+        self.bet = 0
 
     def get_name(self):
         return self.name
