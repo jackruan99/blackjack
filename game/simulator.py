@@ -1,14 +1,15 @@
 # Single Player Blackjack Simulator
 
-
-from libraries.player import Player
-from libraries.dealer import Dealer
-from libraries.deck import Deck
 import sys
 import os
 
 ROOT_DIR = os.path.dirname(os.path.abspath("top_level_file.txt"))
 sys.path.append(ROOT_DIR)
+
+
+from libraries.player import Player
+from libraries.dealer import Dealer
+from libraries.deck import Deck
 
 
 def deal(deck, dealer, player):
@@ -38,7 +39,6 @@ def play_round(round, deck, dealer, player):
     print(f'ROUND {round} ({len(deck.get_deck())} cards left)')
     print(f'You have {player.get_chips()} chips.')
     bet_amount = int(input("This round's bet: "))
-    print(f'Bet: {bet_amount}')
     player.bet(bet_amount)
     deal(deck, dealer, player)
     print_dealer_player_hand(dealer, player)
@@ -49,13 +49,14 @@ def play_round(round, deck, dealer, player):
             action = input('Your action: ')
             if action == 'H':
                 player.append_card(deck.deal())
-                print_dealer_player_hand(dealer, player)
+                print(player.get_name(), end=': ')
+                player.get_hand()[0].print_hand()
             elif action == 'S':
                 break
             elif action == 'D':
                 player.double_bet()
                 player.append_card(deck.deal())
-                print(f'Bet: {player.get_bet_amount()}')
+                print(f"This round's bet (Double Down): {player.get_bet_amount()}")
                 print_dealer_player_hand(dealer, player)
                 break
             elif action == 'SUR':
@@ -77,14 +78,35 @@ def play_round(round, deck, dealer, player):
                     break
                 else:
                     print('NO ACTION FOUND!')
-    # Dealer plays out the cards
-    dealer.reveal()
-    while (dealer.get_hand().get_values()[0] < 17 and dealer.get_hand().get_values()[1] < 17) or (dealer.get_hand().get_values()[0] < 17 and dealer.get_hand().get_values()[1] > 21):
-        dealer.append_card(deck.deal())
-        print('Dealer: ', end='')
-        dealer.get_hand().print_hand()
-    # Find winner and fix chips
-
+    # If I have a blackjack
+    if player.get_hand()[0] == [1, 10] or player.get_hand()[0] == [10, 1]:
+        dealer.reveal()
+        if dealer.get_hand()[0] != [1, 10] and dealer.get_hand()[0] != [10, 1]:
+            print('BLACKJACK!')
+            player.add_chips(2.5 * bet_amount)
+    else:
+        # Dealer plays out the cards
+        dealer.reveal()
+        while (dealer.get_hand().get_values()[0] < 17 and dealer.get_hand().get_values()[1] < 17) or (dealer.get_hand().get_values()[0] < 17 and dealer.get_hand().get_values()[1] > 21):
+            dealer.append_card(deck.deal())
+            print('Dealer: ', end='')
+            dealer.get_hand().print_hand()
+        # Find winner and fix chips
+        player_best_value = player.get_hand()[0].get_best_value()
+        dealer_best_value = dealer.get_hand().get_best_value()
+        if player_best_value <= 21:
+            if dealer_best_value > 21:
+                print('DEALER BUSTS!')
+                player.add_chips(2 * bet_amount)
+            else:
+                if player_best_value > dealer_best_value:
+                    print('YOU WIN!')
+                    player.add_chips(2 * bet_amount)
+                elif player_best_value < dealer_best_value:
+                    print('DEALER WINS!')
+                else:
+                    print('PUSH!')
+                    player.add_chips(bet_amount)
     # Reset for next round
     dealer.reset_hand()
     player.reset_bet()

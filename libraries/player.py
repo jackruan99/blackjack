@@ -21,12 +21,14 @@ class Player:
     def get_hand(self):
         return self.hand
     
-    
     def reset_hand(self):
         self.hand = [Hand()]
 
     def get_chips(self):
         return self.chips
+    
+    def add_chips(self, add_amount):
+        self.chips += add_amount
     
     def get_bet_amount(self):
         return self.bet_amount

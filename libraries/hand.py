@@ -12,6 +12,9 @@ class Hand:
     def get_values(self):
         return self.values
     
+    def get_best_value(self):
+        return self.values[1] if self.values[1] <= 21 else self.values[0]
+    
     def append(self, card):
         self.hand.append(card)
         if card.is_shown():
@@ -27,7 +30,7 @@ class Hand:
                         self.values[1] += 11
                     else:
                         self.values[0] += 1
-                        self.values[1] += 11
+                        self.values[1] += 1
                 else:
                     self.values[0] += card.get_value()
                     self.values[1] += card.get_value()
@@ -49,4 +52,4 @@ class Hand:
         s = "[ "
         for card in self.hand:
             s += card.get_name() + ' '
-        print(s + ']' + '  value: ' + str(self.values[1] if self.values[1] <= 21 else self.values[0]))
+        print(s + ']' + '  value: ' + str(self.get_best_value()))
