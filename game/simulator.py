@@ -80,9 +80,8 @@ def get_best_action(dealer, player):
     return best_action
 
 def first_action(deck, dealer, player):
-    end = False
     if player.get_hand()[0].get_hand_value() == [1, 10] or player.get_hand()[0].get_hand_value() == [10, 1]:
-        end = True
+        player.set_last_action('BLACKJACK')
     else:
         best_action = get_best_action(dealer, player)
         print(f'Possible Actions: Hit(H), Stand(S), Double Down(D), Surrender(SUR). (Best Action: {best_action})')
@@ -91,45 +90,43 @@ def first_action(deck, dealer, player):
             player.append_card(deck.deal())
             print(player.get_name(), end=': ')
             player.get_hand()[0].print_hand()
+            player.set_last_action('H')
         elif action == 'S':
-            end = True
+            player.set_last_action('S')
         elif action == 'D':
             player.double_bet()
             player.append_card(deck.deal())
             print(f"This round's bet (Double Down): {player.get_bet_amount()}")
             print_dealer_player_hand(dealer, player)
-            end = True
+            player.set_last_action('D')
         elif action == 'SUR':
             player.set_last_action('SUR')
-            end = True
         else:
             print('NO ACTION FOUND!')
-    return end
 
 
 def more_action(deck, dealer, player):
-    end = False
     if player.get_hand()[0].get_values()[0] > 21 and player.get_hand()[0].get_values()[1] > 21:
         print('YOU BUST!')
-        end = True
+        player.set_last_action('BUST')
     else:
         print('Possible Actions: Hit(H), Stand(S).')
         action = input('Your action: ')
         if action == 'H':
             player.append_card(deck.deal())
             print_dealer_player_hand(dealer, player)
+            player.set_last_action('H')
         elif action == 'S':
-            end = True
+            player.set_last_action('S')
         else:
             print('NO ACTION FOUND!')
-    return end
 
 
 def find_winner_and_payout(deck, dealer, player):
     if player.get_last_action() == 'SUR':
         print('YOU SURRENDERED!')
         player.add_chips(int(player.get_bet_amount() / 2))
-    elif player.get_hand()[0].get_hand_value() == [1, 10] or player.get_hand()[0].get_hand_value() == [10, 1]:
+    elif player.get_last_action() == 'BLACKJACK':
         dealer.reveal()
         if dealer.get_hand().get_hand_value() != [1, 10] and dealer.get_hand().get_hand_value() != [10, 1]:
             print('BLACKJACK!')
@@ -172,10 +169,12 @@ def play_round(round, deck, dealer, player):
     # check_split(player.get_hand()[0])
     while True:
         if len(player.get_hand()[0].get_hand()) == 2:
-            if first_action(deck, dealer, player):
+            first_action(deck, dealer, player)
+            if player.get_last_action() in ['BLACKJACK', 'S', 'D', 'SUR']:
                 break
         else:
-            if more_action(deck, dealer, player):
+            more_action(deck, dealer, player)
+            if player.get_last_action() in ['BUST', 'S']:
                 break
     find_winner_and_payout(deck, dealer, player)
     reset(dealer, player)
