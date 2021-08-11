@@ -14,6 +14,7 @@ class Player:
         self.hand = [Hand()]
         self.chips = 1000
         self.bet_amount = 0
+        self.last_action = 'X'
 
     def get_name(self):
         return self.name
@@ -32,6 +33,15 @@ class Player:
     
     def get_bet_amount(self):
         return self.bet_amount
+    
+    def get_last_action(self):
+        return self.last_action
+    
+    def set_last_action(self, action):
+        self.last_action = action
+    
+    def reset_last_action(self):
+        self.last_action = 'X'
 
     def append_card(self, card):
         self.hand[0].append(card)
@@ -46,3 +56,4 @@ class Player:
 
     def reset_bet(self):
         self.bet_amount = 0
+

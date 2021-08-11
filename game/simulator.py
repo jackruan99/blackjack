@@ -10,6 +10,7 @@ sys.path.append(ROOT_DIR)
 from libraries.player import Player
 from libraries.dealer import Dealer
 from libraries.deck import Deck
+from strategy import *
 
 
 def create_dealer_player():
@@ -51,19 +52,40 @@ def betting(round, deck, dealer, player):
     print()
     print(f'ROUND {round} ({len(deck.get_deck())} cards left)')
     print(f'You have {player.get_chips()} chips.')
-    bet_amount = int(input("This round's bet: "))
+    bet_amount = 0
+    while True:
+        try:
+            bet_amount = int(input("This round's bet: "))
+            break
+        except:
+            print('Please enter a integer number.')
     player.bet(bet_amount)
     deal(deck, dealer, player)
     print_dealer_player_hand(dealer, player)
-    return bet_amount
 
+
+def get_best_action(dealer, player):
+    best_action = 'X'
+    player_hand_value = player.get_hand()[0].get_hand_value()
+    dealer_hand_value = dealer.get_hand().get_hand_value()
+    if 1 in player_hand_value:
+        other_value = player_hand_value[0] if player_hand_value[0] != 1 else player_hand_value[1]
+        best_action = soft_totals[other_value][dealer_hand_value[0]]
+    else:
+        player_value = player.get_hand()[0].get_best_value()
+        if (player_value == 15 and dealer_hand_value[0] == 10) or (player_value == 16 and dealer_hand_value[0] in [1, 9, 10]):
+            best_action = 'SUR'
+        else:
+            best_action = hard_totals[player_value][dealer_hand_value[0]]
+    return best_action
 
 def first_action(deck, dealer, player):
     end = False
     if player.get_hand()[0].get_hand_value() == [1, 10] or player.get_hand()[0].get_hand_value() == [10, 1]:
         end = True
     else:
-        print('Possible Actions: Hit(H), Stand(S), Double Down(D), Surrender(SUR).')
+        best_action = get_best_action(dealer, player)
+        print(f'Possible Actions: Hit(H), Stand(S), Double Down(D), Surrender(SUR). (Best Action: {best_action})')
         action = input('Your action: ')
         if action == 'H':
             player.append_card(deck.deal())
@@ -78,8 +100,8 @@ def first_action(deck, dealer, player):
             print_dealer_player_hand(dealer, player)
             end = True
         elif action == 'SUR':
-            # surrender
-            pass
+            player.set_last_action('SUR')
+            end = True
         else:
             print('NO ACTION FOUND!')
     return end
@@ -104,7 +126,10 @@ def more_action(deck, dealer, player):
 
 
 def find_winner_and_payout(deck, dealer, player):
-    if player.get_hand()[0].get_hand_value() == [1, 10] or player.get_hand()[0].get_hand_value() == [10, 1]:
+    if player.get_last_action() == 'SUR':
+        print('YOU SURRENDERED!')
+        player.add_chips(int(player.get_bet_amount() / 2))
+    elif player.get_hand()[0].get_hand_value() == [1, 10] or player.get_hand()[0].get_hand_value() == [10, 1]:
         dealer.reveal()
         if dealer.get_hand().get_hand_value() != [1, 10] and dealer.get_hand().get_hand_value() != [10, 1]:
             print('BLACKJACK!')
@@ -139,10 +164,11 @@ def reset(dealer, player):
     dealer.reset_hand()
     player.reset_bet()
     player.reset_hand()
+    player.reset_last_action()
 
 
 def play_round(round, deck, dealer, player):
-    bet_amount = betting(round, deck, dealer, player)
+    betting(round, deck, dealer, player)
     # check_split(player.get_hand()[0])
     while True:
         if len(player.get_hand()[0].get_hand()) == 2:
