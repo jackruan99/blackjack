@@ -1,8 +1,8 @@
-# import sys
-# import os
+import sys
+import os
 
-# ROOT_DIR = os.path.dirname(os.path.abspath("top_level_file.txt"))
-# sys.path.append(ROOT_DIR)
+ROOT_DIR = os.path.dirname(os.path.abspath("top_level_file.txt"))
+sys.path.append(ROOT_DIR)
 
 
 from libraries.deck import Deck

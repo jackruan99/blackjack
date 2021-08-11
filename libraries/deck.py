@@ -27,8 +27,11 @@ class Deck:
         random.shuffle(self.deck)
 
     # remove a Card from deck and return it
-    def deal(self):
-        return self.deck.pop()
+    def deal(self, shown=True):
+        card = self.deck.pop()
+        if not shown:
+            card.flip()
+        return card
 
     def print_deck(self):
         s = "[ "

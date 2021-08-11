@@ -24,6 +24,23 @@ class Player:
         return self.chip
 
     def append_card(self, card):
-        self.hand.append(card)
+        self.hand[0].append(card)
 
-# Actions: Hit, Stand, Double, Split, Surrender, Insurance
+    # Actions: Hit, Stand, Double, Split, Surrender, Insurance
+    def hit(self, deck):
+        self.hand.append_card(deck.deal())
+    
+    def stand(self):
+        pass
+
+    def double(self):
+        pass
+
+    def split(self):
+        pass
+
+    def surrender(self):
+        pass
+
+    # def insurance(self):
+    #     pass

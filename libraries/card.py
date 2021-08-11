@@ -3,6 +3,7 @@ class Card:
         self.rank = rank
         self.suit = suit
         self.value = 10 if rank > 10 else rank
+        self.shown = True
 
     # 1 = ace, ... , 11 = jack, 12 = queen, 13 = king
     def get_rank(self):
@@ -16,11 +17,16 @@ class Card:
     def get_value(self):
         return self.value
 
+    def flip(self):
+        self.shown = not self.shown
+
     # return 'black' or 'red'
     # def get_color(self):
     #     return 'black' if self.suit in ['C', 'S'] else 'red'
 
     def get_name(self):
+        if not self.shown:
+            return 'card'
         if self.rank == 1:
             return 'A' + str(self.suit)
         if self.rank == 11:
