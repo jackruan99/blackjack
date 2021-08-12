@@ -1,10 +1,3 @@
-# import sys
-# import os
-
-# ROOT_DIR = os.path.dirname(os.path.abspath("top_level_file.txt"))
-# sys.path.append(ROOT_DIR)
-
-
 from libraries.hand import Hand
 
 
@@ -13,14 +6,12 @@ class Player:
         self.name = name
         self.hand = [Hand()]
         self.chips = 1000
-        self.bet_amount = 0
-        self.last_action = 'X'
 
     def get_name(self):
         return self.name
 
-    def get_hand(self):
-        return self.hand
+    def get_hand(self, i=0):
+        return self.hand[i]
     
     def reset_hand(self):
         self.hand = [Hand()]
@@ -30,30 +21,14 @@ class Player:
     
     def add_chips(self, add_amount):
         self.chips += add_amount
-    
-    def get_bet_amount(self):
-        return self.bet_amount
-    
-    def get_last_action(self):
-        return self.last_action
-    
-    def set_last_action(self, action):
-        self.last_action = action
-    
-    def reset_last_action(self):
-        self.last_action = 'X'
 
-    def append_card(self, card):
-        self.hand[0].append(card)
-
-    def bet(self, bet_amount):
-        self.chips -= bet_amount
-        self.bet_amount = bet_amount
-
-    def double_bet(self):
-        self.chips -= self.bet_amount
-        self.bet_amount *= 2
-
-    def reset_bet(self):
-        self.bet_amount = 0
-
+    def payout(self):
+        for hand in self.hand:
+            if hand.get_payout_status() == 'BLACKJACK':
+                self.add_chips(int(2.5 * hand.get_bet_amount()))
+            elif hand.get_payout_status == 'WIN':
+                self.add_chips(int(2 * hand.get_bet_amount()))
+            elif hand.get_payout_status() == 'PUSH':
+                self.add_chips(int(0.5 * hand.get_bet_amount()))
+            elif hand.get_payout_status() == 'SUR':
+                self.add_chips(int(0.5 * hand.get_bet_amount()))

@@ -13,7 +13,7 @@ class Card:
     def get_suit(self):
         return self.suit
 
-    # ace = 1, ..., 10 = 10, jack = 10, queen = 10, king = 10
+    # ace = 1, ... , 10 = 10, jack = 10, queen = 10, king = 10
     def get_value(self):
         return self.value
 
@@ -23,19 +23,15 @@ class Card:
     def flip(self):
         self.shown = not self.shown
 
-    # return 'black' or 'red'
-    # def get_color(self):
-    #     return 'black' if self.suit in ['C', 'S'] else 'red'
-
     def get_name(self):
         if not self.shown:
-            return 'card'
+            return 'Card'
         if self.rank == 1:
-            return 'A' + str(self.suit)
+            return 'A' + self.suit
         if self.rank == 11:
-            return 'J' + str(self.suit)
+            return 'J' + self.suit
         if self.rank == 12:
-            return 'Q' + str(self.suit)
+            return 'Q' + self.suit
         if self.rank == 13:
-            return 'K' + str(self.suit)
-        return str(self.rank) + str(self.suit)
+            return 'K' + self.suit
+        return str(self.rank) + self.suit
