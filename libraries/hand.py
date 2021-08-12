@@ -2,6 +2,8 @@ class Hand:
     def __init__(self):
         self.hand = []
         self.values = [0, 0]
+        self.bet_amount = 0
+        self.last_action = 'X'
 
     def get_hand(self):
         return self.hand

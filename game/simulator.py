@@ -26,13 +26,18 @@ def get_shuffled_deck(num_decks):
     return deck
 
 
-def check_split(hand):
-    if hand[0].get_value() == hand[1].get_value():
-        split = input('Do you want to split (y/n): ')
+def want_split(dealer, player):
+    hand_value = player.get_hand()[0].get_hand_value()
+    if hand_value[0] == hand_value[1]:
+        best_action = pair_splitting[hand_value[0]][dealer.get_hand().get_hand_value()[0]]
+        print(f'Possible Actions: Yes(Y), No(N). (Best Action: {best_action})')
+        split = input('Do you want to split (Y/N): ')
         if split == 'y':
             # split cards
             pass
 
+def split_pair():
+    pass
 
 def deal(deck, dealer, player):
     player.append_card(deck.deal())
@@ -166,7 +171,8 @@ def reset(dealer, player):
 
 def play_round(round, deck, dealer, player):
     betting(round, deck, dealer, player)
-    # check_split(player.get_hand()[0])
+    if want_split(dealer, player):
+        split_pair()
     while True:
         if len(player.get_hand()[0].get_hand()) == 2:
             first_action(deck, dealer, player)
