@@ -35,6 +35,7 @@ def want_split(dealer, hand):
         split = input('Do you want to split: ')
         while split not in ['Y', 'N']:
             print(RED + 'INVALID INPUT!' + END)
+            split = input('Do you want to split: ')
         else:
             return split == 'Y'
     return False
@@ -130,6 +131,7 @@ def first_action(deck, dealer, player, i=0):
 
 def more_action(deck, dealer, player, i=0):
     hand = player.get_hand(i)
+    # TODO: add best_action logic here
     if hand.get_values()[0] > 21 and hand.get_values()[1] > 21:
         print(BOLD + 'YOU BUST!' + END)
         hand.set_payout_status('L')
