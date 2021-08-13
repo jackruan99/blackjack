@@ -1,3 +1,4 @@
+from libraries.color import *
 from libraries.hand import Hand
 
 
@@ -9,8 +10,8 @@ class Dealer:
         return self.hand
     
     def reveal(self):
-        self.hand.flip_second_card()
-        print('Dealer: ', end='')
+        self.hand.show_second_card()
+        print(GREEN + 'Dealer: ', end='')
         self.hand.print_hand()
 
     def append_card(self, card):

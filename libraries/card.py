@@ -1,9 +1,9 @@
 class Card:
-    def __init__(self, rank, suit):
+    def __init__(self, rank, suit, shown=True):
         self.rank = rank
         self.suit = suit
         self.value = 10 if rank > 10 else rank
-        self.shown = True
+        self.shown = shown
 
     # 1 = ace, ... , 11 = jack, 12 = queen, 13 = king
     def get_rank(self):
@@ -20,6 +20,9 @@ class Card:
     def is_shown(self):
         return self.shown
 
+    def show(self):
+         self.shown = True
+    
     def flip(self):
         self.shown = not self.shown
 
