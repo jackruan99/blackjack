@@ -11,7 +11,7 @@ from libraries.color import *
 from libraries.player import Player
 from libraries.dealer import Dealer
 from libraries.deck import Deck
-from strategy import *
+from libraries.strategy import *
 
 
 def create_dealer_player():
