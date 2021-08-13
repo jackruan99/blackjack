@@ -33,7 +33,10 @@ def want_split(dealer, hand):
         best_action = pair_splitting[hand_value[0]][dealer.get_hand().get_hand_value()[0]]
         print(f'Possible Actions: Yes(Y), No(N). (Best Action: {UNDERLINE + best_action + END})')
         split = input('Do you want to split: ')
-        return split == 'Y'
+        while split not in ['Y', 'N']:
+            print(RED + 'INVALID INPUT!' + END)
+        else:
+            return split == 'Y'
     return False
 
 
