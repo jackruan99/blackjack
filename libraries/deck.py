@@ -15,6 +15,9 @@ class Deck:
     def get_deck(self):
         return self.deck
 
+    def get_deck_len(self):
+        return len(self.deck)
+
     # shuffles the current deck
     def shuffle(self):
         random.shuffle(self.deck)
