@@ -27,3 +27,6 @@ class Dealer:
     
     def reset_hand(self):
         self.hand = Hand()
+    
+    def check_blackjack(self):
+        return self.hand.get_hand_value() == [1, 10] or self.hand.get_hand_value() == [10, 1]

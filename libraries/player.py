@@ -63,3 +63,6 @@ class Player:
     
     def reset_hand(self):
         self.hand = [Hand()]
+    
+    def check_blackjack(self, i=0):
+        return self.get_hand(i).get_hand_value() == [1, 10] or self.get_hand(i).get_hand_value() == [10, 1]

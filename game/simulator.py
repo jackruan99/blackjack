@@ -150,9 +150,11 @@ def more_action(deck, dealer, player, i=0):
 
 def update_payout_status(deck, dealer, player):
     dealer.reveal()
-    while dealer.get_hand().get_values()[0] < 17 and dealer.get_hand().get_values()[1] < 17:
+    soft_17 = dealer.get_hand().get_values() == [7, 17]
+    while soft_17 or (dealer.get_hand().get_values()[0] < 17 and (dealer.get_hand().get_values()[1] < 17 or dealer.get_hand().get_values()[1] > 21)):
         dealer.append_card(deck.deal())
         print_dealer_hand(dealer.get_hand())
+        soft_17 = dealer.get_hand().get_values() == [7, 17]
     for i, hand in enumerate(player.get_all_hands()):
         if player.get_hand_len() > 1:
             print(BOLD + f'-- Hand {i+1} --' + END)
@@ -193,27 +195,37 @@ def reset(dealer, player):
 
 def play_round(round, deck, dealer, player):
     betting(round, deck, dealer, player)
-    i = 0
-    while i < player.get_hand_len():
-        if player.get_hand_len() > 1:
-            print(f'-- Hand {i+1} --')
-        print_dealer_player_hand(dealer.get_hand(), player.get_hand(i))
-        while want_split(dealer, player.get_hand(i)):
-            split_pair(deck, player, i)
+    if dealer.check_blackjack():
+        print_player_hand(player.get_hand())
+        dealer.reveal()
+        if player.check_blackjack():
+            print(BOLD + 'BLACKJACK PUSH!' + END)
+            player.get_hand().set_payout_status('P')
+        else:
+            print(BOLD + 'DEALER BLACKJACK!' + END)
+            player.get_hand().set_payout_status('L')
+    else:
+        i = 0
+        while i < player.get_hand_len():
             if player.get_hand_len() > 1:
-                print(f'-- Hand {i+1} --')
+                print(BOLD + f'-- Hand {i+1} --' + END)
             print_dealer_player_hand(dealer.get_hand(), player.get_hand(i))
-        while True:
-            if len(player.get_hand(i).get_hand()) == 2:
-                first_action(deck, dealer, player, i)
-                if player.get_hand(i).get_last_action() in ['S', 'D', 'SUR'] or player.get_hand(i).get_payout_status() in ['B', 'S', 'L']:
-                    break
-            else:
-                more_action(deck, dealer, player, i)
-                if player.get_hand(i).get_last_action() == 'S' or player.get_hand(i).get_payout_status() == 'L':
-                    break
-        i += 1
-    update_payout_status(deck, dealer, player)
+            while want_split(dealer, player.get_hand(i)):
+                split_pair(deck, player, i)
+                if player.get_hand_len() > 1:
+                    print(BOLD + f'-- Hand {i+1} --' + END)
+                print_dealer_player_hand(dealer.get_hand(), player.get_hand(i))
+            while True:
+                if len(player.get_hand(i).get_hand()) == 2:
+                    first_action(deck, dealer, player, i)
+                    if player.get_hand(i).get_last_action() in ['S', 'D', 'SUR'] or player.get_hand(i).get_payout_status() in ['B', 'S', 'L']:
+                        break
+                else:
+                    more_action(deck, dealer, player, i)
+                    if player.get_hand(i).get_last_action() == 'S' or player.get_hand(i).get_payout_status() == 'L':
+                        break
+            i += 1
+        update_payout_status(deck, dealer, player)
     player.payout()
     reset(dealer, player)
 
