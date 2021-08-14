@@ -131,12 +131,12 @@ def first_action(deck, dealer, player, i=0):
 
 def more_action(deck, dealer, player, i=0):
     hand = player.get_hand(i)
-    # TODO: add best_action logic here 
     if hand.get_values()[0] > 21 and hand.get_values()[1] > 21:
         print(BOLD + 'YOU BUST!' + END)
         hand.set_payout_status('L')
     else:
-        print('Possible Actions: Hit(H), Stand(S).')
+        best_action = get_best_action(dealer.get_hand(), hand)
+        print(f'Possible Actions: Hit(H), Stand(S). (Best Action: {UNDERLINE + best_action + END})')
         action = input('Your action: ')
         if action == 'H':
             hand.append(deck.deal())
@@ -230,8 +230,20 @@ def play_round(round, deck, dealer, player):
     reset(dealer, player)
 
 
-def play_game(num_decks):
-    print(BOLD + '-- Blackjack Game Simulator --' + END)
+def play_game():
+    print(BOLD + f'-- Blackjack Game Simulator --' + END)
+    num_decks = None
+    while True:
+        try: 
+            num_decks = int(input('Number of Decks (1, 2, 4, 6 or 8): '))
+            if num_decks in [1, 2, 4, 6, 8]:
+                break
+            else:
+                print(RED + 'INVALID AMOUNT!' + END)
+        except:
+            print(RED + 'INVALID AMOUNT!' + END)
+
+
     dealer, player = create_dealer_player()
     deck = get_shuffled_deck(num_decks)
     round = 1
@@ -244,4 +256,4 @@ def play_game(num_decks):
         round += 1
 
 
-play_game(8)
+play_game()
