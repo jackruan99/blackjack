@@ -69,7 +69,7 @@ def print_dealer_player_hand(dealer_hand, player_hand):
 
 def betting(round, deck, dealer, player):
     print()
-    print(BOLD + f'ROUND {round} ' + END + f'({deck.get_deck_len()} cards left)')
+    print(BOLD + f'ROUND {round} ' + END + f'(cards left: {UNDERLINE + str(deck.get_deck_len()) + END} | count: {UNDERLINE + str(deck.get_count()) + END} | true count: {UNDERLINE + str(deck.get_true_count()) + END})')
     print(f'You have {UNDERLINE + str(player.get_chips()) + END} chips.')
     bet_amount = None
     while True:
@@ -244,4 +244,4 @@ def play_game(num_decks):
         round += 1
 
 
-play_game(2)
+play_game(8)
