@@ -46,6 +46,10 @@ def split_pair(deck, player, i):
 
 
 def deal(deck, dealer, player):
+    # player.append_card(Card(1, 'S'))
+    # dealer.append_card(Card(1, 'S'))
+    # player.append_card(Card(9, 'S'))
+    # dealer.append_card(Card(10, 'S', shown=False))
     player.append_card(deck.deal())
     dealer.append_card(deck.deal())
     player.append_card(deck.deal())
@@ -88,17 +92,31 @@ def betting(round, deck, dealer, player):
 
 def get_best_action(dealer_hand, player_hand):
     best_action = 'X'
-    player_hand_value = player_hand.get_hand_value()
-    dealer_hand_value = dealer_hand.get_hand_value()
-    if 1 in player_hand_value:
-        other_value = player_hand_value[0] if player_hand_value[0] != 1 else player_hand_value[1]
-        best_action = soft_totals[other_value][dealer_hand_value[0]]
-    else:
-        player_value = player_hand.get_best_value()
-        if (player_value == 15 and dealer_hand_value[0] == 10) or (player_value == 16 and dealer_hand_value[0] in [1, 9, 10]):
-            best_action = 'SUR'
+    if player_hand.get_hand_len() == 2:
+        player_hand_value = player_hand.get_hand_value()
+        dealer_hand_value = dealer_hand.get_hand_value()
+        if 1 in player_hand_value:
+            other_value = player_hand_value[0] if player_hand_value[0] != 1 else player_hand_value[1]
+            best_action = soft_totals[other_value][dealer_hand_value[0]]
         else:
-            best_action = hard_totals[player_value][dealer_hand_value[0]]
+            player_value = player_hand.get_best_value()
+            if (player_value == 15 and dealer_hand_value[0] == 10) or (player_value == 16 and dealer_hand_value[0] in [1, 9, 10]):
+                best_action = 'SUR'
+            else:
+                best_action = hard_totals[player_value][dealer_hand_value[0]]
+    elif player_hand.get_hand_len() > 2:
+        player_hand_value = player_hand.get_hand_value()
+        dealer_hand_value = dealer_hand.get_hand_value()
+        if 1 not in player_hand_value:
+            player_value = player_hand.get_best_value()
+            best_action = hard_totals2[player_value][dealer_hand_value[0]]
+        else:
+            player_value = player_hand.get_values()
+            if player_value[0] > 11:
+                best_action = hard_totals2[player_hand.get_best_value()][dealer_hand_value[0]]
+            else:
+                other_value = player_value[0] - 1
+                best_action = soft_totals2[other_value][dealer_hand_value[0]]
     return best_action
 
 
@@ -235,7 +253,7 @@ def play_game():
     num_decks = None
     while True:
         try: 
-            num_decks = int(input('Number of Decks (1, 2, 4, 6 or 8): '))
+            num_decks = int(input('Number of decks (1, 2, 4, 6 or 8): '))
             if num_decks in [1, 2, 4, 6, 8]:
                 break
             else:
