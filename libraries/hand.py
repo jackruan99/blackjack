@@ -13,6 +13,9 @@ class Hand:
     def get_hand(self):
         return self.hand
     
+    def get_hand_len(self):
+        return len(self.hand)
+    
     # [AH, 10S] = [1, 10]
     def get_hand_value(self):
         hand_value = []
@@ -84,7 +87,7 @@ class Hand:
         card = self.hand.pop(i)
         if card.get_value() == 1:
             self.values[0] -= 1
-            self.values[1] -= 11
+            self.values[1] -= 1
         else:
             self.values[0] -= card.get_value()
             self.values[1] -= card.get_value()

@@ -46,6 +46,10 @@ def split_pair(deck, player, i):
 
 
 def deal(deck, dealer, player):
+    # player.append_card(Card(1, 'S'))
+    # dealer.append_card(Card(1, 'S'))
+    # player.append_card(Card(9, 'S'))
+    # dealer.append_card(Card(10, 'S', shown=False))
     player.append_card(deck.deal())
     dealer.append_card(deck.deal())
     player.append_card(deck.deal())
@@ -88,17 +92,31 @@ def betting(round, deck, dealer, player):
 
 def get_best_action(dealer_hand, player_hand):
     best_action = 'X'
-    player_hand_value = player_hand.get_hand_value()
-    dealer_hand_value = dealer_hand.get_hand_value()
-    if 1 in player_hand_value:
-        other_value = player_hand_value[0] if player_hand_value[0] != 1 else player_hand_value[1]
-        best_action = soft_totals[other_value][dealer_hand_value[0]]
-    else:
-        player_value = player_hand.get_best_value()
-        if (player_value == 15 and dealer_hand_value[0] == 10) or (player_value == 16 and dealer_hand_value[0] in [1, 9, 10]):
-            best_action = 'SUR'
+    if player_hand.get_hand_len() == 2:
+        player_hand_value = player_hand.get_hand_value()
+        dealer_hand_value = dealer_hand.get_hand_value()
+        if 1 in player_hand_value:
+            other_value = player_hand_value[0] if player_hand_value[0] != 1 else player_hand_value[1]
+            best_action = soft_totals[other_value][dealer_hand_value[0]]
         else:
-            best_action = hard_totals[player_value][dealer_hand_value[0]]
+            player_value = player_hand.get_best_value()
+            if (player_value == 15 and dealer_hand_value[0] == 10) or (player_value == 16 and dealer_hand_value[0] in [1, 9, 10]):
+                best_action = 'SUR'
+            else:
+                best_action = hard_totals[player_value][dealer_hand_value[0]]
+    elif player_hand.get_hand_len() > 2:
+        player_hand_value = player_hand.get_hand_value()
+        dealer_hand_value = dealer_hand.get_hand_value()
+        if 1 not in player_hand_value:
+            player_value = player_hand.get_best_value()
+            best_action = hard_totals2[player_value][dealer_hand_value[0]]
+        else:
+            player_value = player_hand.get_values()
+            if player_value[0] > 11:
+                best_action = hard_totals2[player_hand.get_best_value()][dealer_hand_value[0]]
+            else:
+                other_value = player_value[0] - 1
+                best_action = soft_totals2[other_value][dealer_hand_value[0]]
     return best_action
 
 
@@ -131,12 +149,12 @@ def first_action(deck, dealer, player, i=0):
 
 def more_action(deck, dealer, player, i=0):
     hand = player.get_hand(i)
-    # TODO: add best_action logic here 
     if hand.get_values()[0] > 21 and hand.get_values()[1] > 21:
         print(BOLD + 'YOU BUST!' + END)
         hand.set_payout_status('L')
     else:
-        print('Possible Actions: Hit(H), Stand(S).')
+        best_action = get_best_action(dealer.get_hand(), hand)
+        print(f'Possible Actions: Hit(H), Stand(S). (Best Action: {UNDERLINE + best_action + END})')
         action = input('Your action: ')
         if action == 'H':
             hand.append(deck.deal())
@@ -230,8 +248,20 @@ def play_round(round, deck, dealer, player):
     reset(dealer, player)
 
 
-def play_game(num_decks):
-    print(BOLD + '-- Blackjack Game Simulator --' + END)
+def play_game():
+    print(BOLD + f'-- Blackjack Game Simulator --' + END)
+    num_decks = None
+    while True:
+        try: 
+            num_decks = int(input('Number of decks (1, 2, 4, 6 or 8): '))
+            if num_decks in [1, 2, 4, 6, 8]:
+                break
+            else:
+                print(RED + 'INVALID AMOUNT!' + END)
+        except:
+            print(RED + 'INVALID AMOUNT!' + END)
+
+
     dealer, player = create_dealer_player()
     deck = get_shuffled_deck(num_decks)
     round = 1
@@ -244,4 +274,4 @@ def play_game(num_decks):
         round += 1
 
 
-play_game(8)
+play_game()
