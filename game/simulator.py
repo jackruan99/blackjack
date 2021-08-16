@@ -8,16 +8,18 @@ sys.path.append(ROOT_DIR)
 
 
 from libraries.color import *
+# from libraries.card import Card
 from libraries.player import Player
 from libraries.dealer import Dealer
 from libraries.deck import Deck
 from libraries.strategy import *
 
 
-def create_dealer_player():
+def create_dealer_player(player_name=None):
     dealer = Dealer()
-    name = input("Enter player's name: ")
-    player = Player(name)
+    if player_name == None:
+        player_name = input("Enter player's name: ")
+    player = Player(player_name)
     return dealer, player
 
 
@@ -27,17 +29,19 @@ def get_shuffled_deck(num_decks):
     return deck
 
 
-def want_split(dealer, hand):
+def want_split(dealer, hand, autoplay=False):
     hand_value = hand.get_hand_value()
     if hand_value[0] == hand_value[1]:
         best_action = pair_splitting[hand_value[0]][dealer.get_hand().get_hand_value()[0]]
-        print(f'Possible Actions: Yes(Y), No(N). (Best Action: {UNDERLINE + best_action + END})')
-        split = input('Do you want to split: ')
-        while split not in ['Y', 'N']:
-            print(RED + 'INVALID INPUT!' + END)
-            split = input('Do you want to split: ')
+        if autoplay:
+            split = best_action
         else:
-            return split == 'Y'
+            print(f'Possible Actions: Yes(Y), No(N). (Best Action: {UNDERLINE + best_action + END})')
+            split = input('Do you want to split: ')
+            while split not in ['Y', 'N']:
+                print(RED + 'INVALID INPUT!' + END)
+                split = input('Do you want to split: ')
+        return split == 'Y'
     return False
 
 
@@ -46,8 +50,8 @@ def split_pair(deck, player, i):
 
 
 def deal(deck, dealer, player):
-    # player.append_card(Card(1, 'S'))
-    # dealer.append_card(Card(1, 'S'))
+    # player.append_card(Card(2, 'S'))
+    # dealer.append_card(Card(6, 'S'))
     # player.append_card(Card(9, 'S'))
     # dealer.append_card(Card(10, 'S', shown=False))
     player.append_card(deck.deal())
@@ -71,63 +75,97 @@ def print_dealer_player_hand(dealer_hand, player_hand):
     print_player_hand(player_hand)
     
 
-def betting(round, deck, dealer, player):
+def betting(round, deck, dealer, player, bet_amount=None):
     print()
     print(BOLD + f'ROUND {round} ' + END + f'(cards left: {UNDERLINE + str(deck.get_deck_len()) + END} | count: {UNDERLINE + str(deck.get_count()) + END} | true count: {UNDERLINE + str(deck.get_true_count()) + END})')
     print(f'You have {UNDERLINE + str(player.get_chips()) + END} chips.')
-    bet_amount = None
-    while True:
-        try:
-            bet_amount = int(input("This round's bet: "))
-            if bet_amount <= 0 or bet_amount > player.get_chips():
+    if bet_amount == None:
+        while True:
+            try:
+                bet_amount = int(input("This round's bet: "))
+                if bet_amount <= 0 or bet_amount > player.get_chips():
+                    print(RED + 'INVALID AMOUNT!' + END)
+                else:
+                    break
+            except:
                 print(RED + 'INVALID AMOUNT!' + END)
-            else:
-                break
-        except:
-            print(RED + 'INVALID AMOUNT!' + END)
-        
+    if bet_amount > player.get_chips():
+        bet_amount = player.get_chips()
     player.bet(bet_amount)
     deal(deck, dealer, player)
 
 
-def get_best_action(dealer_hand, player_hand):
+def get_best_action(dealer_hand, player_hand, can_double=True):
     best_action = 'X'
-    if player_hand.get_hand_len() == 2:
-        player_hand_value = player_hand.get_hand_value()
-        dealer_hand_value = dealer_hand.get_hand_value()
-        if 1 in player_hand_value:
-            other_value = player_hand_value[0] if player_hand_value[0] != 1 else player_hand_value[1]
-            best_action = soft_totals[other_value][dealer_hand_value[0]]
-        else:
-            player_value = player_hand.get_best_value()
-            if (player_value == 15 and dealer_hand_value[0] == 10) or (player_value == 16 and dealer_hand_value[0] in [1, 9, 10]):
-                best_action = 'SUR'
-            else:
-                best_action = hard_totals[player_value][dealer_hand_value[0]]
-    elif player_hand.get_hand_len() > 2:
-        player_hand_value = player_hand.get_hand_value()
-        dealer_hand_value = dealer_hand.get_hand_value()
-        if 1 not in player_hand_value:
-            player_value = player_hand.get_best_value()
-            best_action = hard_totals2[player_value][dealer_hand_value[0]]
-        else:
-            player_value = player_hand.get_values()
-            if player_value[0] > 11:
-                best_action = hard_totals2[player_hand.get_best_value()][dealer_hand_value[0]]
-            else:
-                other_value = player_value[0] - 1
+    if not can_double:
+        if player_hand.get_hand_len() == 2:
+            player_hand_value = player_hand.get_hand_value()
+            dealer_hand_value = dealer_hand.get_hand_value()
+            if 1 in player_hand_value:
+                other_value = player_hand_value[0] if player_hand_value[0] != 1 else player_hand_value[1]
                 best_action = soft_totals2[other_value][dealer_hand_value[0]]
+            else:
+                player_value = player_hand.get_best_value()
+                if (player_value == 15 and dealer_hand_value[0] == 10) or (player_value == 16 and dealer_hand_value[0] in [1, 9, 10]):
+                    best_action = 'SUR'
+                else:
+                    best_action = hard_totals2[player_value][dealer_hand_value[0]]
+        elif player_hand.get_hand_len() > 2:
+            player_hand_value = player_hand.get_hand_value()
+            dealer_hand_value = dealer_hand.get_hand_value()
+            if 1 not in player_hand_value:
+                player_value = player_hand.get_best_value()
+                best_action = hard_totals2[player_value][dealer_hand_value[0]]
+            else:
+                player_value = player_hand.get_values()
+                if player_value[0] > 11:
+                    best_action = hard_totals2[player_hand.get_best_value()][dealer_hand_value[0]]
+                else:
+                    other_value = player_value[0] - 1
+                    best_action = soft_totals2[other_value][dealer_hand_value[0]]
+    else:
+        if player_hand.get_hand_len() == 2:
+            player_hand_value = player_hand.get_hand_value()
+            dealer_hand_value = dealer_hand.get_hand_value()
+            if 1 in player_hand_value:
+                other_value = player_hand_value[0] if player_hand_value[0] != 1 else player_hand_value[1]
+                best_action = soft_totals[other_value][dealer_hand_value[0]]
+            else:
+                player_value = player_hand.get_best_value()
+                if (player_value == 15 and dealer_hand_value[0] == 10) or (player_value == 16 and dealer_hand_value[0] in [1, 9, 10]):
+                    best_action = 'SUR'
+                else:
+                    best_action = hard_totals[player_value][dealer_hand_value[0]]
+        elif player_hand.get_hand_len() > 2:
+            player_hand_value = player_hand.get_hand_value()
+            dealer_hand_value = dealer_hand.get_hand_value()
+            if 1 not in player_hand_value:
+                player_value = player_hand.get_best_value()
+                best_action = hard_totals2[player_value][dealer_hand_value[0]]
+            else:
+                player_value = player_hand.get_values()
+                if player_value[0] > 11:
+                    best_action = hard_totals2[player_hand.get_best_value()][dealer_hand_value[0]]
+                else:
+                    other_value = player_value[0] - 1
+                    best_action = soft_totals2[other_value][dealer_hand_value[0]]
     return best_action
 
 
-def first_action(deck, dealer, player, i=0):
+def first_action(deck, dealer, player, i=0, autoplay=False):
     hand = player.get_hand(i)
     if hand.get_hand_value() == [1, 10] or hand.get_hand_value() == [10, 1]:
         hand.set_payout_status('B')
     else:
-        best_action = get_best_action(dealer.get_hand(), hand)
-        print(f'Possible Actions: Hit(H), Stand(S), Double Down(D), Surrender(SUR). (Best Action: {UNDERLINE + best_action + END})')
-        action = input('Your action: ')
+        can_double = True
+        if player.get_chips() < hand.get_bet_amount():
+            can_double = False
+        best_action = get_best_action(dealer.get_hand(), hand, can_double)
+        if autoplay:
+            action = best_action
+        else:
+            print(f'Possible Actions: Hit(H), Stand(S), Double Down(D), Surrender(SUR). (Best Action: {UNDERLINE + best_action + END})')
+            action = input('Your action: ')
         if action == 'H':
             hand.append(deck.deal())
             print_player_hand(hand)
@@ -135,11 +173,15 @@ def first_action(deck, dealer, player, i=0):
         elif action == 'S':
             hand.set_last_action('S')
         elif action == 'D':
-            player.double_bet(hand)
-            hand.append(deck.deal())
-            print(f"This round's bet (Double Down): {hand.get_bet_amount()}")
-            print_player_hand(hand)
-            hand.set_last_action('D')
+            if player.get_chips() < hand.get_bet_amount():
+                print(RED + 'NOT ENOUGH CHIPS!' + END)
+                can_double = False
+            else:
+                player.double_bet(hand)
+                hand.append(deck.deal())
+                print(f"This round's bet (Double Down): {hand.get_bet_amount()}")
+                print_player_hand(hand)
+                hand.set_last_action('D')
         elif action == 'SUR':
             hand.set_last_action('SUR')
             hand.set_payout_status('S')
@@ -147,15 +189,18 @@ def first_action(deck, dealer, player, i=0):
             print(RED + 'INVALID ACTION!' + END)
 
 
-def more_action(deck, dealer, player, i=0):
+def more_action(deck, dealer, player, i=0, autoplay=False):
     hand = player.get_hand(i)
     if hand.get_values()[0] > 21 and hand.get_values()[1] > 21:
         print(BOLD + 'YOU BUST!' + END)
         hand.set_payout_status('L')
     else:
         best_action = get_best_action(dealer.get_hand(), hand)
-        print(f'Possible Actions: Hit(H), Stand(S). (Best Action: {UNDERLINE + best_action + END})')
-        action = input('Your action: ')
+        if autoplay:
+            action = best_action
+        else:
+            print(f'Possible Actions: Hit(H), Stand(S). (Best Action: {UNDERLINE + best_action + END})')
+            action = input('Your action: ')
         if action == 'H':
             hand.append(deck.deal())
             print_player_hand(hand)
@@ -211,8 +256,8 @@ def reset(dealer, player):
     player.reset_hand()
 
 
-def play_round(round, deck, dealer, player):
-    betting(round, deck, dealer, player)
+def play_round(round, deck, dealer, player, bet_amount=None, autoplay=False):
+    betting(round, deck, dealer, player, bet_amount)
     if dealer.check_blackjack():
         print_player_hand(player.get_hand())
         dealer.reveal()
@@ -228,18 +273,18 @@ def play_round(round, deck, dealer, player):
             if player.get_hand_len() > 1:
                 print(BOLD + f'-- Hand {i+1} --' + END)
             print_dealer_player_hand(dealer.get_hand(), player.get_hand(i))
-            while want_split(dealer, player.get_hand(i)):
+            while want_split(dealer, player.get_hand(i), autoplay):
                 split_pair(deck, player, i)
                 if player.get_hand_len() > 1:
                     print(BOLD + f'-- Hand {i+1} --' + END)
                 print_dealer_player_hand(dealer.get_hand(), player.get_hand(i))
             while True:
                 if len(player.get_hand(i).get_hand()) == 2:
-                    first_action(deck, dealer, player, i)
+                    first_action(deck, dealer, player, i, autoplay)
                     if player.get_hand(i).get_last_action() in ['S', 'D', 'SUR'] or player.get_hand(i).get_payout_status() in ['B', 'S', 'L']:
                         break
                 else:
-                    more_action(deck, dealer, player, i)
+                    more_action(deck, dealer, player, i, autoplay)
                     if player.get_hand(i).get_last_action() == 'S' or player.get_hand(i).get_payout_status() == 'L':
                         break
             i += 1
@@ -248,30 +293,33 @@ def play_round(round, deck, dealer, player):
     reset(dealer, player)
 
 
-def play_game():
+def play_game(autoplay=False):
+    if autoplay:
+        num_decks = 8
+        player_name = 'Bot'
+        bet_amount = 100
+    else:
+        num_decks = None
+        player_name = None
+        bet_amount = None
     print(BOLD + f'-- Blackjack Game Simulator --' + END)
-    num_decks = None
-    while True:
-        try: 
-            num_decks = int(input('Number of decks (1, 2, 4, 6 or 8): '))
-            if num_decks in [1, 2, 4, 6, 8]:
-                break
-            else:
+    if num_decks == None:
+        while True:
+            try: 
+                num_decks = int(input('Number of decks (1, 2, 4, 6 or 8): '))
+                if num_decks in [1, 2, 4, 6, 8]:
+                    break
+                else:
+                    print(RED + 'INVALID AMOUNT!' + END)
+            except:
                 print(RED + 'INVALID AMOUNT!' + END)
-        except:
-            print(RED + 'INVALID AMOUNT!' + END)
-
-
-    dealer, player = create_dealer_player()
+    dealer, player = create_dealer_player(player_name)
     deck = get_shuffled_deck(num_decks)
     round = 1
     while player.get_chips() > 0:  # Play rounds until the player has 0 chip
-        play_round(round, deck, dealer, player)
+        play_round(round, deck, dealer, player, bet_amount, autoplay)
         if deck.get_deck_len() < int(0.25 * num_decks * 52):
             deck = get_shuffled_deck(num_decks)
             print()
             print('DECK RESHUFFLED!')
         round += 1
-
-
-play_game()
