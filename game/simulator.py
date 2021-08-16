@@ -247,7 +247,7 @@ def update_payout_status(deck, dealer, player):
                         print(BOLD + 'DEALER WINS!' + END)
                         hand.set_payout_status('L' + END)
                     else:
-                        print(BOLD + 'PUSH!')
+                        print(BOLD + 'PUSH!' + END)
                         hand.set_payout_status('P')
 
 
@@ -323,3 +323,38 @@ def play_game(autoplay=False):
             print()
             print('DECK RESHUFFLED!')
         round += 1
+
+
+def get_chips_after_rounds(number_of_rounds, autoplay=True):
+    if autoplay:
+        num_decks = 8
+        player_name = 'Bot'
+        bet_amount = 100
+    else:
+        num_decks = None
+        player_name = None
+        bet_amount = None
+    print(BOLD + f'-- Blackjack Game Simulator --' + END)
+    if num_decks == None:
+        while True:
+            try: 
+                num_decks = int(input('Number of decks (1, 2, 4, 6 or 8): '))
+                if num_decks in [1, 2, 4, 6, 8]:
+                    break
+                else:
+                    print(RED + 'INVALID AMOUNT!' + END)
+            except:
+                print(RED + 'INVALID AMOUNT!' + END)
+    dealer, player = create_dealer_player(player_name)
+    deck = get_shuffled_deck(num_decks)
+    round = 1
+    while player.get_chips() > 0:  # Play rounds until the player has 0 chip
+        play_round(round, deck, dealer, player, bet_amount, autoplay)
+        if deck.get_deck_len() < int(0.25 * num_decks * 52):
+            deck = get_shuffled_deck(num_decks)
+            print()
+            print('DECK RESHUFFLED!')
+        if round == number_of_rounds:
+            return player.get_chips()
+        round += 1
+    return 0
