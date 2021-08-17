@@ -11,7 +11,7 @@ from game.simulator import get_chips_after_rounds
 
 
 number_of_rounds = 100
-number_of_games = 10000 
+number_of_games = 100  # 100/100 -> 35 seconds
 chips = []
 for _ in range(number_of_games):
     chips.append(get_chips_after_rounds(number_of_rounds))
