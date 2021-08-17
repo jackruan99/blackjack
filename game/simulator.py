@@ -111,7 +111,7 @@ def betting(round, deck, dealer, player, bet_amount=None, autoplay=False):
     if not autoplay:
         while True:
             try:
-                print(f"Recommend Betting Amount: {UNDERLINE + str(get_best_betting_amount(deck.get_true_count())) + END}")
+                print(f"Recommend Betting Amount: {UNDERLINE + str(get_best_betting_amount(deck.get_true_count())) + END}")  # For betting deviation
                 bet_amount = int(input(f"This round's bet: "))
                 if bet_amount <= 0 or bet_amount > player.get_chips():
                     print(RED + 'INVALID AMOUNT!' + END)
@@ -120,7 +120,7 @@ def betting(round, deck, dealer, player, bet_amount=None, autoplay=False):
             except:
                 print(RED + 'INVALID AMOUNT!' + END)
     else:
-        bet_amount = get_best_betting_amount(deck.get_true_count())
+        bet_amount = get_best_betting_amount(deck.get_true_count())  # For betting deviation
     if bet_amount > player.get_chips():
         bet_amount = player.get_chips()
     player.bet(bet_amount)
