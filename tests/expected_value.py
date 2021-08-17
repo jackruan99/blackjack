@@ -10,9 +10,12 @@ sys.path.append(ROOT_DIR)
 from game.simulator import get_chips_after_rounds
 
 
-number_of_rounds = 1000
-number_of_games = 100
+number_of_rounds = 100
+number_of_games = 10000 
 total = 0
 for _ in range(number_of_games):
     total += get_chips_after_rounds(number_of_rounds)
 print(f'Expected Chips: {total / number_of_games}')
+
+# No Betting and Playing Deviation
+# rounds: 100, games: 10000 => expected chips: 972.6375
