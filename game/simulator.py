@@ -362,7 +362,8 @@ def get_chips_after_rounds(number_of_rounds, autoplay=True):
     if autoplay:
         num_decks = 8
         player_name = 'Bot'
-        bet_amount = 100
+        # bet_amount = 100  # For no betting deviation
+        bet_amount = None  # For betting deviation
     else:
         num_decks = None
         player_name = None
