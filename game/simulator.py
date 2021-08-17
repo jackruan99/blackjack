@@ -75,20 +75,52 @@ def print_dealer_player_hand(dealer_hand, player_hand):
     print_player_hand(player_hand)
     
 
-def betting(round, deck, dealer, player, bet_amount=None):
+def get_best_betting_amount(true_count):
+    if true_count < 0.5:
+        return betting_spread[0]
+    if true_count < 1:
+        return betting_spread[1]
+    if true_count < 1.5:
+        return betting_spread[2]
+    if true_count < 2:
+        return betting_spread[3]
+    if true_count < 2.5:
+        return betting_spread[4]
+    if true_count < 3:
+        return betting_spread[5]
+    if true_count < 3.5:
+        return betting_spread[6]
+    if true_count < 4:
+        return betting_spread[7]
+    if true_count < 4.5:
+        return betting_spread[8]
+    if true_count < 5:
+        return betting_spread[9]
+    if true_count < 5.5:
+        return betting_spread[10]
+    if true_count < 6:
+        return betting_spread[11]
+    return betting_spread[12]
+
+
+
+def betting(round, deck, dealer, player, bet_amount=None, autoplay=False):
     print()
     print(BOLD + f'ROUND {round} ' + END + f'(cards left: {UNDERLINE + str(deck.get_deck_len()) + END} | count: {UNDERLINE + str(deck.get_count()) + END} | true count: {UNDERLINE + str(deck.get_true_count()) + END})')
     print(f'You have {UNDERLINE + str(player.get_chips()) + END} chips.')
-    if bet_amount == None:
+    if not autoplay:
         while True:
             try:
-                bet_amount = int(input("This round's bet: "))
+                print(f"Recommend Betting Amount: {UNDERLINE + str(get_best_betting_amount(deck.get_true_count())) + END})")
+                bet_amount = int(input(f"This round's bet: "))
                 if bet_amount <= 0 or bet_amount > player.get_chips():
                     print(RED + 'INVALID AMOUNT!' + END)
                 else:
                     break
             except:
                 print(RED + 'INVALID AMOUNT!' + END)
+    else:
+        bet_amount = get_best_betting_amount(deck.get_true_count())
     if bet_amount > player.get_chips():
         bet_amount = player.get_chips()
     player.bet(bet_amount)
@@ -257,7 +289,7 @@ def reset(dealer, player):
 
 
 def play_round(round, deck, dealer, player, bet_amount=None, autoplay=False):
-    betting(round, deck, dealer, player, bet_amount)
+    betting(round, deck, dealer, player, bet_amount, autoplay)
     if dealer.check_blackjack():
         print_player_hand(player.get_hand())
         dealer.reveal()
@@ -297,7 +329,8 @@ def play_game(autoplay=False):
     if autoplay:
         num_decks = 8
         player_name = 'Bot'
-        bet_amount = 100
+        # bet_amount = 100  # For no betting deviation
+        bet_amount = None  # For betting deviation
     else:
         num_decks = None
         player_name = None
