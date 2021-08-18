@@ -50,10 +50,10 @@ def split_pair(deck, player, i):
 
 
 def deal(deck, dealer, player):
-    # player.append_card(Card(2, 'S'))
-    # dealer.append_card(Card(6, 'S'))
-    # player.append_card(Card(9, 'S'))
-    # dealer.append_card(Card(10, 'S', shown=False))
+    # player.append_card(Card(1, 'S'))
+    # dealer.append_card(Card(1, 'S'))
+    # player.append_card(Card(10, 'S'))
+    # dealer.append_card(Card(9, 'S', shown=False))
     player.append_card(deck.deal())
     dealer.append_card(deck.deal())
     player.append_card(deck.deal())
@@ -125,6 +125,20 @@ def betting(round, deck, dealer, player, bet_amount=None, autoplay=False):
         bet_amount = player.get_chips()
     player.bet(bet_amount)
     deal(deck, dealer, player)
+
+
+def insurance(dealer_hand, player_hand, true_count, autoplay=False):
+    best_action = 'N'
+    if true_count >= 3:
+        best_action = 'Y'
+    if not autoplay:
+        print_dealer_player_hand(dealer_hand, player_hand)
+        print(f'Possible Actions: Yes(Y), No(N). (Best Action: {best_action})')
+        insure = input('Do you want to buy insurance: ')
+        while insure not in ['Y', 'N']:
+            insure = input('Do you want to buy insurance: ')
+        return insure == 'Y'
+    return best_action == 'Y'
 
 
 def get_best_action(dealer_hand, player_hand, can_double=True):
@@ -290,6 +304,13 @@ def reset(dealer, player):
 
 def play_round(round, deck, dealer, player, bet_amount=None, autoplay=False):
     betting(round, deck, dealer, player, bet_amount, autoplay)
+    # Insurance
+    if dealer.get_hand().get_hand_value()[0] == 1:
+        if insurance(dealer.get_hand(), player.get_hand(), deck.get_true_count(), autoplay):
+            if dealer.check_blackjack():
+                player.add_chips(int(player.get_hand().get_bet_amount()))
+            else:
+                player.lose_chips(int(player.get_hand().get_bet_amount() / 2))
     if dealer.check_blackjack():
         print_player_hand(player.get_hand())
         dealer.reveal()

@@ -31,6 +31,9 @@ class Player:
     def add_chips(self, add_amount):
         self.chips += add_amount
 
+    def lose_chips(self, lose_amount):
+        self.chips -= lose_amount
+
     def bet(self, bet_amount):
         self.chips -= bet_amount
         self.hand[0].bet(bet_amount)
