@@ -394,7 +394,7 @@ def get_chips_after_rounds(number_of_rounds, autoplay=True):
                     print(RED + 'INVALID AMOUNT!' + END)
             except:
                 print(RED + 'INVALID AMOUNT!' + END)
-    dealer, player = create_dealer_player(player_name)
+    dealer, player = create_dealer_player()
     deck = get_shuffled_deck(num_decks)
     round = 1
     while player.get_chips() > 0:  # Play rounds until the player has 0 chip
