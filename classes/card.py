@@ -5,11 +5,11 @@ class Card:
         self.value = 10 if rank > 10 else rank
         self.shown = shown
 
-    # 1 = ace, ... , 11 = jack, 12 = queen, 13 = king
+    # ace = 1, ... , 10 = 10, jack = 11, queen = 12, king = 13
     def get_rank(self):
         return self.rank
 
-    # C = clubs, D = diamonds, H = hearts, S = spades
+    # clubs = C, diamonds = D, hearts = H, spades = S
     def get_suit(self):
         return self.suit
 
@@ -17,12 +17,12 @@ class Card:
     def get_value(self):
         return self.value
 
-    def is_shown(self):
+    def get_shown(self):
         return self.shown
 
     def show(self):
-         self.shown = True
-    
+        self.shown = True
+
     def flip(self):
         self.shown = not self.shown
 

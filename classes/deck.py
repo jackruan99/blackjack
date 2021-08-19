@@ -1,19 +1,18 @@
 import random
 
-from libraries.card import Card
+from classes.card import Card
 
 
 class Deck:
-    def __init__(self, size=1):
+    def __init__(self, num_decks=1):
         self.deck = []
-        for _ in range(size):
+        for _ in range(num_decks):
             for rank in range(1, 14):
                 for suit in ['C', 'D', 'H', 'S']:
                     self.deck.append(Card(rank, suit))
-        self.num_decks = size
+        self.num_decks = num_decks
         self.count = 0
 
-    # return a list of Card
     def get_deck(self):
         return self.deck
 
@@ -27,13 +26,11 @@ class Deck:
         return self.count
 
     def get_true_count(self):
-        return round(self.count / self.num_decks, 2)
+        return round(self.count/self.num_decks, 2)
 
-    # shuffles the current deck
     def shuffle(self):
         random.shuffle(self.deck)
 
-    # remove a Card from deck and return it
     def deal(self, shown=True):
         card = self.deck.pop()
         if not shown:
