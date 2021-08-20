@@ -2,9 +2,9 @@ from classes.hand import Hand
 
 
 class Player:
-    def __init__(self, num_hands=1):
-        self.hands = [Hand() for _ in range(num_hands)]
-        self.num_hands = num_hands
+    def __init__(self):
+        self.hands = [Hand()]
+        self.num_hands = 0
         self.chips = 1000
 
     def get_hands(self):
@@ -17,7 +17,7 @@ class Player:
         return len(self.hands)
 
     def reset_hand(self):
-        self.hands = [Hand() for _ in range(self.num_hands)]
+        self.hands = [Hand()]
 
     def get_chips(self):
         return self.chips
@@ -29,7 +29,7 @@ class Player:
         self.chips -= lose_amount
 
     def bet(self, bet_amount):
-        self.chips -= bet_amount
+        self.chips -= bet_amount * len(self.hands)
         for hand in self.hands:
             hand.bet(bet_amount)
 

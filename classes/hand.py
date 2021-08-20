@@ -63,7 +63,7 @@ class Hand:
 
     # example: [AH, 10S] => True
     def check_blackjack(self):
-        cards_value = self.get_cards_value 
+        cards_value = self.get_cards_value() 
         return cards_value == [1, 10] or cards_value == [10, 1]
 
     # example: [AH, 10S] => [11, 21]
@@ -97,8 +97,8 @@ class Hand:
     def set_payout_status(self, status):
         self.payout_status = status
 
-    def print_hand(self, color):
+    def print_hand(self):
         s = "[ "
         for card in self.hand:
             s += card.get_name() + ' '
-        print(color + s + ']  ' + f'(Value: {str(self.get_best_value())})' + END)
+        print(s + ']  ' + f'(Value: {str(self.get_best_value())})' + END)

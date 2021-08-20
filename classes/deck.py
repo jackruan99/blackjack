@@ -35,7 +35,7 @@ class Deck:
         card_value = card.get_value()
         if card_value in [1, 10]:
             self.count -= 1
-        elif card_value() in [2, 3, 4, 5, 6]:
+        elif card_value in [2, 3, 4, 5, 6]:
             self.count += 1
         return card
 

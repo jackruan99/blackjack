@@ -1,4 +1,5 @@
 from classes.hand import Hand
+from libraries.color import *
 
 
 class Dealer:
@@ -8,10 +9,8 @@ class Dealer:
     def get_hand(self):
         return self.hand
     
-    def reveal(self, dealer_color):
+    def reveal(self):
         self.hand.show_second_card()
-        # print(dealer_color + 'Dealer: ' + END, end='')
-        # self.hand.print_hand()
 
     def play(self, deck):
         while self.hand.get_values()[0] < 17 and self.hand.get_values()[1] < 17:

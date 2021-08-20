@@ -33,3 +33,4 @@ class Card:
             return 'Q' + self.suit
         if self.rank == 13:
             return 'K' + self.suit
+        return str(self.rank) + self.suit
