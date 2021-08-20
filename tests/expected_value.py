@@ -24,9 +24,9 @@ print(f'Expected Chips: {sum(chips) / num_games}')
 # STARTING WITH 1000 CHIPS
 
 # No Betting and Playing Deviation (bet amount: 100)
-# rounds: 100, games: 100 => expected chips: 
-# rounds: 100, games: 1000 => expected chips: 
-# rounds: 100, games: 10000 => expected chips: 
+# rounds: 100, games: 100 => expected chips: 747.5 (<1 second)
+# rounds: 100, games: 1000 => expected chips: 929.15 (5 seconds)
+# rounds: 100, games: 10000 => expected chips: 984.385 (49 seconds)
 # rounds: 100, games: 100000 => expected chips: 
 # rounds: 100, games: 1000000 => expected chips: 
 

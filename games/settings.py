@@ -34,17 +34,26 @@ def input_settings():
                 print(RED + 'INVALID INPUT!' + END)
         except:
             print(RED + 'INVALID INPUT!' + END)
-    # TODO: Add player color support
-    # while True:
-    #     try:
-    #         player_color = input("Player's Color on Terminal? (BLUE, GREEN): ")
-    #         if player_color in []:
-    #             break
-    #         else:
-    #             print(RED + 'INVALID INPUT!' + END)
-    #     except:
-    #         print(RED + 'INVALID INPUT!' + END)
-    return num_decks, s17, insurance, BLUE
+    while True:
+        try:
+            player_color = input("Player's Color on Terminal? (PURPLE, BLUE, GREEN, YELLOW): ")
+            if player_color == 'PURPLE':
+                player_color = PURPLE
+                break
+            elif player_color == 'BLUE':
+                player_color = BLUE
+                break
+            elif player_color == 'GREEN':
+                player_color = GREEN
+                break
+            elif player_color == 'YELLOW':
+                player_color = YELLOW
+                break
+            else:
+                print(RED + 'INVALID INPUT!' + END)
+        except:
+            print(RED + 'INVALID INPUT!' + END)
+    return num_decks, s17, insurance, player_color
 
 
 # For Autoplayer

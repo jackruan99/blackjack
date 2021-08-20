@@ -59,7 +59,8 @@ def deal(deck, dealer, player):
 
 
 def betting(deck, dealer, player):
-    bet_amount = get_best_betting_amount(deck.get_true_count())
+    bet_amount = 100
+    # bet_amount = get_best_betting_amount(deck.get_true_count())
     player.bet(bet_amount)
     deal(deck, dealer, player)
 
@@ -268,4 +269,4 @@ def get_chips_after_rounds(num_rounds):
     return 0
 
 
-print(get_chips_after_rounds(1000))
+print(get_chips_after_rounds(100))
