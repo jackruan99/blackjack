@@ -44,7 +44,8 @@ class Hand:
     
     def show_second_card(self):
         self.hand[1].flip()
-        if self.hand[1].get_value() == 1:
+        value = self.hand[1].get_value()
+        if value == 1:
             if self.values[0] == self.values[1]:
                 self.values[0] += 1
                 self.values[1] += 11
@@ -52,7 +53,6 @@ class Hand:
                 self.values[0] += 1
                 self.values[1] += 1
         else:
-            value = self.hand[1].get_value()
             self.values[0] += value
             self.values[1] += value
 
