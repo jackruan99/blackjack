@@ -18,7 +18,6 @@ class Card:
     def flip(self):
         self.show = not self.show
 
-    # For Blackjack
     # ace = 1, ... , 10 = 10, jack = 10, queen = 10, king = 10
     def get_value(self):
         return 10 if self.rank > 10 else self.rank
