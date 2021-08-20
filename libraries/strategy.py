@@ -1,11 +1,7 @@
 # Blackjack Strategy Chart
 
 
-# X: Null Action
-# H: Hit
-# S: Stand
-# D: Double if allowed, otherwise hit
-# Ds: Double if allowed, otherwise stand
+# X: Null Action, H: Hit, S: Stand, D: Double
 hard_totals = [['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
                ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
                ['X', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H'],
@@ -76,9 +72,8 @@ soft_totals2 = [['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
                ['X', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S'],
                ['X', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S']]
 
-# N: Don't split the pair
-# Y: Split the pair
-# 'DAS' is offered
+# N: Don't split the pair, Y: Split the pair
+# Use when 'DAS' is offered
 pair_splitting = [['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
                   ['X', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y'],
                   ['X', 'N', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'N', 'N', 'N'],
@@ -92,7 +87,7 @@ pair_splitting = [['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
                   ['X', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N'],
                   ['X', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y']]
 
-# 'DAS' is not offered
+# Use when 'DAS' is not offered
 pair_splitting2 = [['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
                    ['X', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y'],
                    ['X', 'N', 'N', 'N', 'Y', 'Y', 'Y', 'Y', 'N', 'N', 'N'],

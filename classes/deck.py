@@ -5,11 +5,7 @@ from classes.card import Card
 
 class Deck:
     def __init__(self, num_decks=1):
-        self.deck = []
-        for _ in range(num_decks):
-            for rank in range(1, 14):
-                for suit in ['C', 'D', 'H', 'S']:
-                    self.deck.append(Card(rank, suit))
+        self.deck = [Card(rank, suit) for _ in range(num_decks) for rank in range(1, 14) for suit in ['C', 'D', 'H', 'S']]
         self.num_decks = num_decks
         self.count = 0
 
@@ -31,13 +27,15 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.deck)
 
-    def deal(self, shown=True):
+    def deal(self, show=True):
         card = self.deck.pop()
-        if not shown:
+        if not show:
             card.flip()
-        if card.get_value() in [1, 10]:
+        # update count
+        card_value = card.get_value()
+        if card_value in [1, 10]:
             self.count -= 1
-        elif card.get_value() in [2, 3, 4, 5, 6]:
+        elif card_value in [2, 3, 4, 5, 6]:
             self.count += 1
         return card
 

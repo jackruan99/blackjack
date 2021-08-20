@@ -7,25 +7,32 @@ ROOT_DIR = os.path.dirname(os.path.abspath("top_level_file.txt"))
 sys.path.append(ROOT_DIR)
 
 
-from game.simulator import get_chips_after_rounds
+from games.autoplayer import get_chips_after_rounds
 
-
-# Without betting deviation: 100/100 -> 12 seconds
-# With betting deviation: 100/100 -> 35 seconds
-number_of_rounds = 100
-number_of_games = 100
+num_rounds = 100
+num_games = 10000
 chips = []
-for _ in range(number_of_games):
-    chips.append(get_chips_after_rounds(number_of_rounds))
-print(f'Expected Chips: {sum(chips) / number_of_games}')
+
+for i in range(num_games):
+    chip = get_chips_after_rounds(num_rounds)
+    print(f'Game {i+1}: {chip}')
+    chips.append(chip)
+
+print(f'Expected Chips: {sum(chips) / num_games}')
 
 
 # STARTING WITH 1000 CHIPS
 
 # No Betting and Playing Deviation (bet amount: 100)
-# rounds: 100, games: 10000 => expected chips: 996.5417
-# rounds: 100, games: 100000 => expected chips: 1003.76466
+# rounds: 100, games: 100 => expected chips: 
+# rounds: 100, games: 1000 => expected chips: 
+# rounds: 100, games: 10000 => expected chips: 
+# rounds: 100, games: 100000 => expected chips: 
+# rounds: 100, games: 1000000 => expected chips: 
 
-# With Betting Deviation (bet amount: <0.5 - 10, <1 - 50, <1.5 - 100, ..., <5.5 - 500, <6 - 550, >=6 - 600)
-# rounds: 100, games: 10000 => expected chips: 1030.5623
-# rounds: 100, games: 100000 => expected chips: 1030.32981
+# With Betting Deviation (10 - 600)
+# rounds: 100, games: 100 => expected chips: 992.45 (<1 second)
+# rounds: 100, games: 1000 => expected chips: 1025.3 (6 seconds)
+# rounds: 100, games: 10000 => expected chips: 1033.748 (60 seconds)
+# rounds: 100, games: 100000 => expected chips:
+# rounds: 100, games: 1000000 => expected chips: 

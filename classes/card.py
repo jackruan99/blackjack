@@ -1,8 +1,8 @@
 class Card:
-    def __init__(self, rank, suit, shown=True):
+    def __init__(self, rank, suit, show=True):
         self.rank = rank
         self.suit = suit
-        self.shown = shown
+        self.show = show
 
     # ace = 1, ... , 10 = 10, jack = 11, queen = 12, king = 13
     def get_rank(self):
@@ -12,21 +12,18 @@ class Card:
     def get_suit(self):
         return self.suit
 
-    def get_shown(self):
-        return self.shown
-
-    def show(self):
-        self.shown = True
+    def get_show(self):
+        return self.show
 
     def flip(self):
-        self.shown = not self.shown
-    
+        self.show = not self.show
+
     # ace = 1, ... , 10 = 10, jack = 10, queen = 10, king = 10
     def get_value(self):
         return 10 if self.rank > 10 else self.rank
 
     def get_name(self):
-        if not self.shown:
+        if not self.show:
             return 'Card'
         if self.rank == 1:
             return 'A' + self.suit
