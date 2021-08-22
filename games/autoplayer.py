@@ -59,8 +59,8 @@ def deal(deck, dealer, player):
 
 
 def betting(deck, dealer, player):
-    bet_amount = 100
-    # bet_amount = get_best_betting_amount(deck.get_true_count())
+    # bet_amount = 100
+    bet_amount = get_best_betting_amount(deck.get_true_count())
     player.bet(bet_amount)
     deal(deck, dealer, player)
 
